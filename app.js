@@ -28,8 +28,9 @@ app.use(passport.session());
 app.get('/',
   ensureLoggedIn('/login/42'),
   function (req, res) {
-    console.log(req.user['username'],'loggedin');
-    res.render('index', {name : req.user['username']});
+    console.log(req.user,'loggedin');
+    console.log(req,'req');
+    res.render('index', {name : req.user});
   });
 
 app.get('/login/42',
