@@ -29,7 +29,6 @@ app.get('/',
   ensureLoggedIn('/login/42'),
   function (req, res) {
     console.log(req.user,'loggedin');
-    console.log(req,'req');
     res.render('index', {name : req.user});
   });
 
