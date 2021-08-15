@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
+var fileStore = require('session-file-store')(session);
 var passport = require('./passportset');
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
@@ -18,7 +19,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({ resave: false, saveUninitialized: false, secret: process.env.SESSION_SECRET }));
+app.use(session({ resave: false, saveUninitialized: false, secret: process.env.SESSION_SECRET , store: new fileStore()}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(passport.initialize());
@@ -41,8 +42,10 @@ app.get('/login/42/return',
   });
 
 app.get('/logout', function (req, res) {
-  req.logout();
-  res.redirect('/');
+    req.logOut();
+    req.session.save(function(){
+	   res.redirect('/');
+	})
 });
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
